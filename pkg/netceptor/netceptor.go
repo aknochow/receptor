@@ -446,6 +446,11 @@ func (s *Netceptor) MaxConnectionIdleTime() time.Duration {
 	return s.maxConnectionIdleTime
 }
 
+// GetLogger returns the logger of this Netceptor instance.
+func (s *Netceptor) GetLogger() *logger.ReceptorLogger {
+	return s.Logger
+}
+
 // Sets the MaxConnectionIdleTime object on the Netceptor instance.
 func (s *Netceptor) SetMaxConnectionIdleTime(userDefinedMaxIdleConnectionTimeout string) error {
 	// before we instantiate a new instance of Netceptor, let's verify that the user defined maxidleconnectiontimeout value is parseable
@@ -1904,9 +1909,8 @@ func (s *Netceptor) runProtocol(ctx context.Context, sess BackendSession, bi *Ba
 							}
 							// This is a late initialization request from the remote node, so don't process it as a routing update.
 							continue
-						} else {
-							remoteEstablished = true
 						}
+						remoteEstablished = true
 						if ok && remoteCost != connectionCost {
 							return s.sendAndLogConnectionRejection(remoteNodeID, ci, "we disagree about the connection cost")
 						}
